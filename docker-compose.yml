@@ -1,0 +1,47 @@
+version: '3.5'
+
+services:
+    node:
+        build:
+            target: develop
+            context: .
+            dockerfile: ./docker/node/Dockerfile
+        restart: "no"
+        tty: true
+        entrypoint: >
+            bash -c "
+                npm install && \
+                npm run start:dev
+            "
+        depends_on:
+            - postgres
+        ports:
+            - "3000:3000"
+        volumes:
+            - ./:/var/www/html:rw
+        logging:
+            driver: json-file
+            options:
+                max-size: '10m'
+                max-file: '10'
+
+    postgres:
+        image: postgres:16.0
+        restart: "no"
+        environment:
+            POSTGRES_USER: ${DATABASE_USERNAME}
+            POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+            POSTGRES_DB: ${DATABASE_NAME}
+            PG_ROOT_PASSWORD: root_pass
+        ports:
+            - ${PGSQL_PORT}:5432
+        volumes:
+            - postgres-volume:/var/lib/postgresql/data:rw
+        logging:
+            driver: json-file
+            options:
+                max-size: '10m'
+                max-file: '10'
+
+volumes:
+    postgres-volume:
