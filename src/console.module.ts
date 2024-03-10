@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { ApiModule } from './modules/api/api.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import databaseConfig from './config/database.config';
 import {
@@ -8,6 +7,7 @@ import {
   TypeOrmModuleOptions,
 } from '@nestjs/typeorm';
 import { CONFIG_TYPE_DATABASE } from './config/constants';
+import { CreateUserCommand } from './commands/create-user.command';
 import { UserService } from './modules/common/user.service';
 import { UserEntity } from './entities/user.entity';
 
@@ -31,6 +31,6 @@ import { UserEntity } from './entities/user.entity';
     TypeOrmModule.forFeature([UserEntity]),
   ],
   controllers: [],
-  providers: [UserService, ApiModule],
+  providers: [UserService, CreateUserCommand],
 })
-export class AppModule {}
+export class ConsoleModule {}
